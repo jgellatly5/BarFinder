@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">BarFinder</string>
+
+    <string-array name="bar_types">
+        <item>Country</item>
+        <item>Irish</item>
+        <item>Arcade</item>
+        <item>Karaoke</item>
+        <item>Trivia</item>
+    </string-array>
+</resources>
