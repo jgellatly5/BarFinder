@@ -6,9 +6,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.facebook.stetho.Stetho;
 import com.facebook.stetho.okhttp3.StethoInterceptor;
@@ -18,6 +18,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
@@ -34,6 +35,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     TextView introText;
     @BindView(R.id.type_spinner)
     Spinner typeSpinner;
+    @BindView(R.id.btn_search)
+    Button btnSearch;
 
     private static final String BASE_URL = "https://api.yelp.com/v3/";
 
@@ -42,7 +45,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private static final String latitude = "37.801459";
     private static final String longitude = "-122.26525579999998";
     
-    private String category = "karaoke";
+    private String category;
+
+    private Retrofit retrofit;
+    private YelpClient yelpClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 R.array.bar_types, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         typeSpinner.setAdapter(adapter);
+        typeSpinner.setOnItemSelectedListener(this);
 
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
 
@@ -63,23 +70,23 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         builder.networkInterceptors().add(httpLoggingInterceptor);
         OkHttpClient okHttpClient = builder.build();
 
-        Retrofit retrofit = new Retrofit.Builder()
+        retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(okHttpClient)
                 .build();
 
-        YelpClient yelpClient = retrofit.create(YelpClient.class);
-        Log.d(TAG, "onCreate: category: " + category);
+        yelpClient = retrofit.create(YelpClient.class);
+    }
+
+    @OnClick(R.id.btn_search)
+    public void search() {
         Call<Bar> call = yelpClient.listBars(API_KEY, latitude, longitude, category);
         call.enqueue(new Callback<Bar>() {
             @Override
             public void onResponse(Call<Bar> call, Response<Bar> response) {
-                int statusCode = response.code();
-                String error = response.message();
 
 
-                Log.d(TAG, "onResponse: status: " + statusCode + " response: " + error);
             }
 
             @Override
@@ -92,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int i, long l) {
-//        category = parent.getItemAtPosition(i).toString();
+        category = parent.getItemAtPosition(i).toString().toLowerCase();
     }
 
     @Override
