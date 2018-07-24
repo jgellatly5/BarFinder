@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.jordangellatly.barfinder.models.Bar;
 import com.jordangellatly.barfinder.models.Business;
@@ -39,13 +40,12 @@ public class ListActivity extends AppCompatActivity {
 
     private static final String API_KEY = "Bearer mUk4y0zvNI7RJ8coBuobzsTT8w0bGUMmauOciscQ-lB2SQfe7zZdco8FnlqU8BH1blaEfJJv_2TCVJh0excsjuDrdiyLtNSVecvccAk43xim0N2jyQY_Uxjj6C8eWHYx";
 
-    private static final String latitude = "37.801459";
-    private static final String longitude = "-122.26525579999998";
-
     private Retrofit retrofit;
     private YelpClient yelpClient;
 
     private String category;
+    private String latitude;
+    private String longitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +73,8 @@ public class ListActivity extends AppCompatActivity {
         yelpClient = retrofit.create(YelpClient.class);
 
         category = getIntent().getStringExtra("category");
+        latitude = getIntent().getStringExtra("latitude");
+        longitude = getIntent().getStringExtra("longitude");
 
         Call<Bar> call = yelpClient.listBars(API_KEY, latitude, longitude, category);
         call.enqueue(new Callback<Bar>() {
@@ -92,8 +94,7 @@ public class ListActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Bar> call, Throwable t) {
-                Log.e(TAG, "onFailure: " + t.getMessage());
-
+                Toast.makeText(ListActivity.this, "Something went wrong.", Toast.LENGTH_SHORT).show();
             }
         });
     }
