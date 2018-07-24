@@ -2,10 +2,29 @@
     <string name="app_name">BarFinder</string>
 
     <string-array name="bar_types">
-        <item>Country</item>
+        <item>CountryDanceHalls</item>
         <item>Irish</item>
         <item>Arcade</item>
         <item>Karaoke</item>
         <item>Trivia</item>
+        <item>Breweries</item>
+        <item>PianoBars</item>
+        <item>WineBars</item>
+        <item>Hookah_Bars</item>
+        <item>WhiskeyBars</item>
+        <item>CigarBars</item>
+        <item>CocktailBars</item>
+        <item>DiveBars</item>
+        <item>GayBars</item>
+        <item>Lounges</item>
+        <item>Pubs</item>
+        <item>Speakeasies</item>
+        <item>SportsBars</item>
+        <item>TikiBars</item>
+        <item>Vermouthbars</item>
+        <item>BeerGardens</item>
+        <item>PoolHalls</item>
+        <item>JazzAndBlues</item>
+        <item>Wineries</item>
     </string-array>
 </resources>
