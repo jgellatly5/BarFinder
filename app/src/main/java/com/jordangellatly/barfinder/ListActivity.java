@@ -3,6 +3,8 @@ package com.jordangellatly.barfinder;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,6 +13,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.jordangellatly.barfinder.list.BarListAdapter;
 import com.jordangellatly.barfinder.models.Bar;
 import com.jordangellatly.barfinder.models.Business;
 
@@ -31,8 +34,8 @@ public class ListActivity extends AppCompatActivity {
 
     private static final String TAG = "ListActivity";
 
-    @BindView(R.id.list_view)
-    ListView listView;
+    @BindView(R.id.recycler_view)
+    RecyclerView recyclerView;
     @BindView(R.id.progress_bar)
     ProgressBar progressBar;
 
@@ -87,8 +90,9 @@ public class ListActivity extends AppCompatActivity {
                     businessNames.add(singleBusiness.getName());
                 }
 
-                ArrayAdapter<String> listViewAdapter = new ArrayAdapter<String>(ListActivity.this, android.R.layout.simple_list_item_1, businessNames);
-                listView.setAdapter(listViewAdapter);
+                BarListAdapter barListAdapter = new BarListAdapter(businesses);
+                recyclerView.setAdapter(barListAdapter);
+                recyclerView.setLayoutManager(new LinearLayoutManager(ListActivity.this));
                 progressBar.setVisibility(ProgressBar.INVISIBLE);
             }
 
