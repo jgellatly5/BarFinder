@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.jordangellatly.barfinder.list.ListActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
