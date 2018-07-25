@@ -16,6 +16,8 @@ import java.util.List;
 
 public class BarListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    private BarListAdapterListener listener;
+
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         public ImageView barImage;
@@ -26,13 +28,20 @@ public class BarListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
             barImage = itemView.findViewById(R.id.bar_image);
             barName = itemView.findViewById(R.id.bar_name);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.onBarSelected(businesses.get(getAdapterPosition()));
+                }
+            });
         }
     }
 
     private List<Business> businesses;
 
-    public BarListAdapter(List<Business> businesses) {
+    public BarListAdapter(List<Business> businesses, BarListAdapterListener listener) {
         this.businesses = businesses;
+        this.listener = listener;
     }
 
     @NonNull
@@ -57,5 +66,9 @@ public class BarListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public int getItemCount() {
         return businesses.size();
+    }
+
+    public interface BarListAdapterListener {
+        void onBarSelected(Business business);
     }
 }

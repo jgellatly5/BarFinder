@@ -1,5 +1,7 @@
 package com.jordangellatly.barfinder.list;
 
+import android.content.Intent;
+import android.os.Parcel;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,8 +12,11 @@ import android.widget.Toast;
 
 import com.jordangellatly.barfinder.R;
 import com.jordangellatly.barfinder.YelpClient;
+import com.jordangellatly.barfinder.detail.DetailActivity;
 import com.jordangellatly.barfinder.models.Bar;
 import com.jordangellatly.barfinder.models.Business;
+
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +31,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class ListActivity extends AppCompatActivity {
+public class ListActivity extends AppCompatActivity implements BarListAdapter.BarListAdapterListener {
 
     private static final String TAG = "ListActivity";
 
@@ -86,7 +91,7 @@ public class ListActivity extends AppCompatActivity {
                     businessNames.add(singleBusiness.getName());
                 }
 
-                BarListAdapter barListAdapter = new BarListAdapter(businesses);
+                BarListAdapter barListAdapter = new BarListAdapter(businesses, ListActivity.this);
                 recyclerView.setAdapter(barListAdapter);
                 recyclerView.setLayoutManager(new LinearLayoutManager(ListActivity.this));
                 progressBar.setVisibility(ProgressBar.INVISIBLE);
@@ -110,5 +115,14 @@ public class ListActivity extends AppCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBarSelected(Business business) {
+        Intent intent = new Intent(ListActivity.this, DetailActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("bar", Parcels.wrap(business));
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 }
