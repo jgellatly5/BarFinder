@@ -1,8 +1,8 @@
 package com.jordangellatly.barfinder.list;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
@@ -10,23 +10,21 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.jordangellatly.barfinder.R;
-import com.jordangellatly.barfinder.models.Business;
-import com.jordangellatly.barfinder.retrofit.YelpClient;
 import com.jordangellatly.barfinder.detail.DetailActivity;
 import com.jordangellatly.barfinder.models.Bar;
+import com.jordangellatly.barfinder.models.Business;
+import com.jordangellatly.barfinder.retrofit.RetrofitProvider;
+import com.jordangellatly.barfinder.retrofit.YelpClient;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ListActivity extends AppCompatActivity implements BarListAdapter.BarListAdapterListener {
 
@@ -54,19 +52,7 @@ public class ListActivity extends AppCompatActivity implements BarListAdapter.Ba
 
         progressBar.setVisibility(ProgressBar.VISIBLE);
 
-        OkHttpClient.Builder builder = new OkHttpClient.Builder();
-
-        HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
-        httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        builder.networkInterceptors().add(httpLoggingInterceptor);
-        OkHttpClient okHttpClient = builder.build();
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(getString(R.string.BASE_URL))
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(okHttpClient)
-                .build();
-
+        retrofit = RetrofitProvider.getInstance(ListActivity.this);
         yelpClient = retrofit.create(YelpClient.class);
 
         category = getIntent().getStringExtra("category");

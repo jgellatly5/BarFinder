@@ -10,18 +10,16 @@ import android.widget.Toast;
 
 import com.jordangellatly.barfinder.R;
 import com.jordangellatly.barfinder.models.Business;
+import com.jordangellatly.barfinder.retrofit.RetrofitProvider;
 import com.jordangellatly.barfinder.retrofit.YelpClient;
 import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -53,25 +51,10 @@ public class DetailActivity extends AppCompatActivity {
 
         progressBar.setVisibility(ProgressBar.VISIBLE);
 
-        OkHttpClient.Builder builder = new OkHttpClient.Builder();
-
-        HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
-        httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        builder.networkInterceptors().add(httpLoggingInterceptor);
-        OkHttpClient okHttpClient = builder.build();
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(getString(R.string.BASE_URL))
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(okHttpClient)
-                .build();
-
+        retrofit = RetrofitProvider.getInstance(DetailActivity.this);
         yelpClient = retrofit.create(YelpClient.class);
 
         String businessId = getIntent().getStringExtra("businessId");
-
-        Toast.makeText(this, "businessId: " + businessId, Toast.LENGTH_SHORT).show();
-
         Call<Business> call = yelpClient.getBusinessDetails(getString(R.string.API_KEY), businessId);
         call.enqueue(new Callback<Business>() {
             @Override
