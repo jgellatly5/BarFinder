@@ -1,7 +1,6 @@
 package com.jordangellatly.barfinder.list;
 
 import android.content.Intent;
-import android.os.Parcel;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,12 +10,10 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.jordangellatly.barfinder.R;
-import com.jordangellatly.barfinder.YelpClient;
+import com.jordangellatly.barfinder.models.Business;
+import com.jordangellatly.barfinder.retrofit.YelpClient;
 import com.jordangellatly.barfinder.detail.DetailActivity;
 import com.jordangellatly.barfinder.models.Bar;
-import com.jordangellatly.barfinder.models.Business;
-
-import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,10 +36,6 @@ public class ListActivity extends AppCompatActivity implements BarListAdapter.Ba
     RecyclerView recyclerView;
     @BindView(R.id.progress_bar)
     ProgressBar progressBar;
-
-    private static final String BASE_URL = "https://api.yelp.com/v3/";
-
-    private static final String API_KEY = "Bearer mUk4y0zvNI7RJ8coBuobzsTT8w0bGUMmauOciscQ-lB2SQfe7zZdco8FnlqU8BH1blaEfJJv_2TCVJh0excsjuDrdiyLtNSVecvccAk43xim0N2jyQY_Uxjj6C8eWHYx";
 
     private Retrofit retrofit;
     private YelpClient yelpClient;
@@ -68,8 +61,8 @@ public class ListActivity extends AppCompatActivity implements BarListAdapter.Ba
         builder.networkInterceptors().add(httpLoggingInterceptor);
         OkHttpClient okHttpClient = builder.build();
 
-        retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(getString(R.string.BASE_URL))
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(okHttpClient)
                 .build();
@@ -80,7 +73,7 @@ public class ListActivity extends AppCompatActivity implements BarListAdapter.Ba
         latitude = getIntent().getStringExtra("latitude");
         longitude = getIntent().getStringExtra("longitude");
 
-        Call<Bar> call = yelpClient.listBars(API_KEY, latitude, longitude, category);
+        Call<Bar> call = yelpClient.listBars(getString(R.string.API_KEY), latitude, longitude, category);
         call.enqueue(new Callback<Bar>() {
             @Override
             public void onResponse(Call<Bar> call, Response<Bar> response) {
@@ -120,9 +113,7 @@ public class ListActivity extends AppCompatActivity implements BarListAdapter.Ba
     @Override
     public void onBarSelected(Business business) {
         Intent intent = new Intent(ListActivity.this, DetailActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putParcelable("bar", Parcels.wrap(business));
-        intent.putExtras(bundle);
+        intent.putExtra("businessId", business.getId());
         startActivity(intent);
     }
 }

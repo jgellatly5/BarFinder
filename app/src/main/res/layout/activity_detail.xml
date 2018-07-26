@@ -54,4 +54,10 @@
         android:textSize="@dimen/detail_text_size"
         android:text="Hours"/>
 
+    <ProgressBar
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:id="@+id/progress_bar"
+        android:layout_centerInParent="true"/>
+
 </RelativeLayout>
